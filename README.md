@@ -2,11 +2,14 @@
 
 ## Requirements
 
-### speedtest-cli
-```$ pip install speedtest-cli```
+### Install python requirements
 
-### Python Twitter API
-```$ pip install twitter```
+This will install:
+
+* speedtest-cli
+* python twitter api
+
+```$ pip install -r requirements.txt```
 
 ## Twitter App
 
