@@ -65,7 +65,7 @@ def test():
         biz_res = 'Comcast Business'
         biz_rez_hashtag = '#comcastbusiness'
 
-    # try to tweet if speedtest couldnt even connet.
+    # try to tweet if speedtest couldn't connect.
     # Probably wont work if the internet is down
     if 'Cannot' in results:
         try:
