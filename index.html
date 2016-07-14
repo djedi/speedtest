@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.2/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.7.0/canvasjs.min.js"></script>
+  <script type="text/javascript">
+    window.onload = function () {
+      $.get('/data.csv', function(data) {
+        var objects = $.csv.toObjects(data);
+
+        var pings = [], downloads = [], uploads = [];
+        for (var i=0; i<objects.length; i++) {
+          var obj = objects[i];
+          var date = moment(obj.DateTime).subtract(7, 'hours').toDate();
+          pings.push({
+            x: date,
+            y: parseFloat(obj.Ping)
+          });
+          downloads.push({
+            x: date,
+            y: parseFloat(obj.Download)
+          });
+          uploads.push({
+            x: date,
+            y: parseFloat(obj.Upload)
+          });
+        }
+
+        dataObj = {
+          type: 'line',
+          showInLegend: true,
+          lineThickness: 2,
+        }
+        pingData = $.extend({}, dataObj);
+        pingData.name = 'Ping ms';
+        pingData.dataPoints = pings;
+        pingData.markerType = 'circle'
+        downloadData = $.extend({}, dataObj);
+        downloadData.name = 'Download Mbps';
+        downloadData.dataPoints = downloads;
+        downloadData.markerType = 'square';
+        uploadData = dataObj;
+        uploadData.name = 'Upload Mbps';
+        uploadData.dataPoints = uploads;
+        uploadData.markerType = 'triangle';
+
+        var chartData = [pingData, downloadData, uploadData];
+
+        var chart = new CanvasJS.Chart("chartContainer",
+          {
+            zoomEnabled: true,
+            animationEnabled: true,
+            title:{
+              text: "Comcast Speed Test Results"
+            },
+            axisX :{
+              labelAngle: -30,
+              gridColor: 'lightblue',
+              tickColor: 'silver'
+            },
+            axisY :{
+              includeZero: false,
+              gridColor: 'silver'
+            },
+            theme: "theme2",
+            toolTip: {
+              shared: true
+            },
+            data: chartData
+          }
+        );
+        chart.render();
+      });
+    }
+  </script>
+</head>
+<body>
+<div id="chartContainer" style="height: 600px; width: 100%;"></div>
+</body>
+</html>
